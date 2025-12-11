@@ -416,17 +416,34 @@ function _prompt_install_feature() {
     local opt="$3"
     local function="$4"
     _install_log "Configure $feature support"
+
+    # --- DEBUG: for VPN provider, print everything ---
+    if [[ "$feature" == "VPN provider" ]]; then
+        echo ">>> DEBUG: VPN provider feature detected"
+        echo ">>> pv_option=${pv_option}"
+        echo ">>> assume_yes=${assume_yes}"
+        echo ">>> opt=${opt}"
+        echo ">>> indirect value \${!opt}=${!opt}"
+        echo ">>> feature=${feature}"
+        echo ">>> function=${function}"
+    fi
+
     echo -n "$prompt? [Y/n]: "
     if [ "$assume_yes" == 0 ]; then
+        echo ">>> assume_yes == no"
         read answer < /dev/tty
+        echo ">>> moved on"
         if [ "$answer" != "${answer#[Nn]}" ]; then
+            echo ">>> we will skip"
             _install_status 0 "(Skipped)"
         else
             $function
         fi
     elif [ "${!opt}" == 1 ]; then
+        echo ">>> Function time"
         $function
     else
+        echo ">>> Sorry we are skipping it whole sale..."
         echo "(Skipped)"
     fi
 }
@@ -481,17 +498,6 @@ function _install_adblock() {
 function _install_provider() {
     _install_log "Installing VPN provider support"
     json="$webroot_dir/config/"vpn-providers.json
-
-    #DEBUG
-    echo ">>> pv_option=$pv_option"
-    echo ">>> webroot_dir=$webroot_dir"
-    echo ">>> raspap_dir=$raspap_dir"
-    if [ ! -f "$json" ]; then
-        echo ">>> ERROR: vpn-providers.json does not exist!"
-    else
-        echo ">>> Found vpn-providers.json"
-    fi
-
     while IFS='|' read -r key value; do
         options["$key"]="$value"
     done< <(jq -r '.providers[] | "\(.id)|\(.name)|\(.bin_path)"' "$json")
