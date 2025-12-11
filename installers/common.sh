@@ -481,6 +481,17 @@ function _install_adblock() {
 function _install_provider() {
     _install_log "Installing VPN provider support"
     json="$webroot_dir/config/"vpn-providers.json
+
+    #DEBUG
+    echo ">>> pv_option=$pv_option"
+    echo ">>> webroot_dir=$webroot_dir"
+    echo ">>> raspap_dir=$raspap_dir"
+    if [ ! -f "$json" ]; then
+        echo ">>> ERROR: vpn-providers.json does not exist!"
+    else
+        echo ">>> Found vpn-providers.json"
+    fi
+
     while IFS='|' read -r key value; do
         options["$key"]="$value"
     done< <(jq -r '.providers[] | "\(.id)|\(.name)|\(.bin_path)"' "$json")
