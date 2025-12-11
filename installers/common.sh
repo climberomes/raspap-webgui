@@ -422,6 +422,7 @@ function _prompt_install_feature() {
         if [ "$answer" != "${answer#[Nn]}" ]; then
             _install_status 0 "(Skipped)"
         else
+            echo -e
             $function
         fi
     elif [[ "$feature" == "VPN provider" ]]; then
@@ -437,11 +438,13 @@ function _prompt_install_feature() {
             fi
         done
         if [[ $found == 1 ]]; then
+            echo -e
             $function
         else
             _install_status 0 "Invalid VPN provider ID ${!opt} - (Skipped)"
         fi
     elif [ "${!opt}" == 1 ]; then
+        echo -e
         $function
     else
         echo "(Skipped)"
