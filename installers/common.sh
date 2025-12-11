@@ -427,7 +427,6 @@ function _prompt_install_feature() {
     elif [[ "$feature" == "VPN provider" ]]; then
         # read valid IDs from JSON
         valid_ids=($(jq -r '.providers[].id' "$webroot_dir/config/vpn-providers.json"))
-
         # check if pv_option is in the list
         local value=${!opt}
         local found=0
@@ -437,12 +436,10 @@ function _prompt_install_feature() {
                 break   # exit loop immediately since we found a match
             fi
         done
-
         if [[ $found == 1 ]]; then
             $function
         else
-            echo ">>> Invalid VPN provider ID ${!opt}, skipping..."
-            _install_status 0 "(Skipped)"
+            _install_status 0 "Invalid VPN provider ID ${!opt} - (Skipped)"
         fi
     elif [ "${!opt}" == 1 ]; then
         $function
