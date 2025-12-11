@@ -7,7 +7,7 @@ define('RASPI_CONFIG_NETWORK', RASPI_CONFIG.'/networking/defaults.json');
 define('RASPI_CONFIG_PROVIDERS', 'config/vpn-providers.json');
 define('RASPI_CONFIG_API', RASPI_CONFIG.'/api');
 define('RASPI_ADMIN_DETAILS', RASPI_CONFIG.'/raspap.auth');
-define('RASPI_WIFI_AP_INTERFACE', 'wlan1');
+define('RASPI_WIFI_AP_INTERFACE', 'wlan0');
 define('RASPI_CACHE_PATH', sys_get_temp_dir() . '/raspap');
 define('RASPI_ERROR_LOG', sys_get_temp_dir() . '/raspap_error.log');
 define('RASPI_DEBUG_LOG', 'raspap_debug.log');
