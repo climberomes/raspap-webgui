@@ -416,34 +416,37 @@ function _prompt_install_feature() {
     local opt="$3"
     local function="$4"
     _install_log "Configure $feature support"
-
-    # --- DEBUG: for VPN provider, print everything ---
-    if [[ "$feature" == "VPN provider" ]]; then
-        echo ">>> DEBUG: VPN provider feature detected"
-        echo ">>> pv_option=${pv_option}"
-        echo ">>> assume_yes=${assume_yes}"
-        echo ">>> opt=${opt}"
-        echo ">>> indirect value \${!opt}=${!opt}"
-        echo ">>> feature=${feature}"
-        echo ">>> function=${function}"
-    fi
-
     echo -n "$prompt? [Y/n]: "
     if [ "$assume_yes" == 0 ]; then
-        echo ">>> assume_yes == no"
         read answer < /dev/tty
-        echo ">>> moved on"
         if [ "$answer" != "${answer#[Nn]}" ]; then
-            echo ">>> we will skip"
             _install_status 0 "(Skipped)"
         else
             $function
         fi
+    elif [[ "$feature" == "VPN provider" ]]; then
+        # read valid IDs from JSON
+        valid_ids=($(jq -r '.providers[].id' "$webroot_dir/config/vpn-providers.json"))
+
+        # check if pv_option is in the list
+        local value=${!opt}
+        local found=0
+        for id in "${valid_ids[@]}"; do
+            if [[ "$id" -eq "$value" ]]; then
+                found=1
+                break   # exit loop immediately since we found a match
+            fi
+        done
+
+        if [[ $found == 1 ]]; then
+            $function
+        else
+            echo ">>> Invalid VPN provider ID ${!opt}, skipping..."
+            _install_status 0 "(Skipped)"
+        fi
     elif [ "${!opt}" == 1 ]; then
-        echo ">>> Function time"
         $function
     else
-        echo ">>> Sorry we are skipping it whole sale..."
         echo "(Skipped)"
     fi
 }
