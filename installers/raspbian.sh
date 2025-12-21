@@ -106,8 +106,8 @@ function _parse_params() {
     restapi_option=1
     adblock_option=1
     wg_option=1
-    pv_option="0"
-    echo "PV_Option first registered as $pv_option"
+    pv_option=0
+    _install_log "PV_Option first registered as $pv_option"
     insiders=0
     ssh=0
     minwrite=0
@@ -139,7 +139,7 @@ function _parse_params() {
             ;;
             -e|--provider)
             pv_option="$2"
-            echo "PV_Option Changed!!! $pv_option"
+            _install_log "PV_Option Changed!!! $pv_option"
             shift
             ;;
             -g|--tcp-bbr)
