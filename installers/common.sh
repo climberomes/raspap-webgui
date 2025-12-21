@@ -415,6 +415,7 @@ function _prompt_install_feature() {
     local prompt="$2"
     local opt="$3"
     local function="$4"
+    _install_log "PV_Option $opt and Value ${!opt}"
     _install_log "Configure $feature support"
     echo -n "$prompt? [Y/n]: "
     if [ "$assume_yes" == 0 ]; then
@@ -427,6 +428,7 @@ function _prompt_install_feature() {
     elif [ "$opt" == "pv_option" ]; then
         local opt_value=${!opt}
         # Skip silently if not requested (opt_value is 0)
+        _install_log "PV_Option $opt and Value $opt_value"
         if [ "$opt_value" == 0 ]; then
             echo "(Skipped)"
         else
